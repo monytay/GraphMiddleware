@@ -9,15 +9,16 @@ clientSecret="clientSecret"
 scope="https:\\www.graph.microsoft.com\.default"
 
 def getAccessToken(){
-  data = {
-    "client credentials" : "client credentials",
-    "tenantID" : tenantID,
-    "clientID" : clientID,
-    "clientSecret" : clientSectret,
-    "scope" : scope
-  }
-response = request(https://login.microsoftonline.com/tenantID/oauth2/token, data=data)
-errorMessage="Token retrieval error"
+  try:
+    data = {
+      "client credentials" : "client credentials",
+      "tenantID" : tenantID,
+      "clientID" : clientID,
+      "clientSecret" : clientSectret,
+      "scope" : scope
+    }
+  response = request(https://login.microsoftonline.com/tenantID/oauth2/token, data=data)
+  errorMessage="Token retrieval error"
 
 if response.status() == 200:
   tokenInfo = response.json(),
@@ -27,13 +28,14 @@ else:
 }
 
 def getPrinters(){
-  headers = {
-    token = getAccessToken()
-    "Authorization" : f`Bearer{token}`,
-    "Content-Type" : "application/json"
-  }
-  response = request(https://graph.microsoft.com/PrinterShare.Read.All,headers=headers)
-  errorMessage="UniversalPrint API error"
+  try:
+    headers = {
+      token = getAccessToken()
+      "Authorization" : f`Bearer{token}`,
+      "Content-Type" : "application/json"
+    }
+    response = request(https://graph.microsoft.com/PrinterShare.Read.All,headers=headers)
+    errorMessage="UniversalPrint API error"
 
   if response.status() == 200:
     printersInfo = response.json(),
