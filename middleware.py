@@ -5,45 +5,43 @@ import json
 import logging 
 import azure.functions as func
 
-load_dotenv():
+load_dotenv()
 
-tenantID = os.get("tenantID")
-clientID = os.get('clientID')
-client_secret = os.get("clientSecret")
-scope = os.get("scope")
+tenantID = os.getenv("tenantID")
+clientID = os.getenv('clientID')
+client_secret = os.getenv("clientSecret")
+scope = os.getenv("scope")
 
 def getAccessToken():
     try:
-        data = {
-      "grant_type" : "client_credentials",
-      "tenantID" : tenantID,
-      "clientID" : clientID,
-      "clientSecret" : clientSectret,
-      "scope" : scope
-    }
-    response = requests.post(https://login.microsoftonline.com/{tenantID}/oauth2/token, data=data)
-    errorMessage="Token retrieval error"
+      data = {
+        "grant_type" : "client_credentials",
+        "clientID" : clientID,
+        "tenantID" : tenantID,
+        "scope" : scope
+      }
+      response = requests.post(f'https://login.microsoftonline.com/{tenantID}/oauth2/token', data=data)
+      errorMessage="Token retrieval error"
 
-    if response.status_code() == 200:
-    tokenInfo = response.json(),
-    return tokenInfo.get('access_token')
-    else:
-    return errorMessage
+      if response.status_code() == 200:
+        tokenInfo = response.json(),
+        return tokenInfo.get('access_token')
+    except:
+      return errorMessage
 
-
-def getPrinters(){
+def getPrinters():
   try:
-    headers = {
-      token = getAccessToken()
-      "Authorization" : f`Bearer{token}`,
+    
+    token = getAccessToken()
+    header = {
+      "Authorization" : f'Bearer{token}',
       "Content-Type" : "application/json"
     }
-    response = request(https://graph.microsoft.com/PrinterShare.Read.All,headers=headers)
+    response = request(f"https://graph.microsoft.com/PrinterShare.Read.All",headers=headers)
     errorMessage="UniversalPrint API error"
 
-  if response.status() == 200:
-    printersInfo = response.json(),
-    return printersInfo 
-  else:
+    if response.status() == 200:
+      printersInfo = response.json(),
+      return printersInfo 
+  except:
     return errorMessage
-}
