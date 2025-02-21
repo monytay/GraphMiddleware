@@ -1,31 +1,35 @@
-import request
+from dotenv import load_dotenv
+import os
+import requests
 import json
 import logging 
 import azure.functions as func
 
-tenantID ="tenandID"
-clientID="clientID"
-clientSecret="clientSecret"
-scope="https:\\www.graph.microsoft.com\.default"
+load_dotenv():
 
-def getAccessToken(){
-  try:
-    data = {
-      "client credentials" : "client credentials",
+tenantID = os.get("tenantID")
+clientID = os.get('clientID')
+client_secret = os.get("clientSecret")
+scope = os.get("scope")
+
+def getAccessToken():
+    try:
+        data = {
+      "grant_type" : "client_credentials",
       "tenantID" : tenantID,
       "clientID" : clientID,
       "clientSecret" : clientSectret,
       "scope" : scope
     }
-  response = request(https://login.microsoftonline.com/tenantID/oauth2/token, data=data)
-  errorMessage="Token retrieval error"
+    response = requests.post(https://login.microsoftonline.com/{tenantID}/oauth2/token, data=data)
+    errorMessage="Token retrieval error"
 
-if response.status() == 200:
-  tokenInfo = response.json(),
-  return tokenInfo.get('access_token')
-else:
-  return errorMessage
-}
+    if response.status_code() == 200:
+    tokenInfo = response.json(),
+    return tokenInfo.get('access_token')
+    else:
+    return errorMessage
+
 
 def getPrinters(){
   try:
