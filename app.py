@@ -13,36 +13,29 @@ scope = "https://www.graph.microsoft.com/.default"
 def getAccessToken():
     try:
       data = {
-        "grant_type" : "client_credentials",
-        "client_id" : clientID,
-        "tenant_id" : tenantID,
-        "clientSecret" : clientSecret,
-        "scope" : scope
+        "tenant_id" : "test",
+        "client_id" : "test2",
+        "client_secret" : "secret",
       }
-      response = requests.post(f'http://localhost:8002/getToken/', data=data)
+      response = requests.post(f'http://localhost:8002/getToken/', json = data)
       errorMessage="Token retrieval error"
+
+      print("Sending request to get access token...")  # Debugging line
+      print("Request payload:", data)  # Print the data being sent
 
       if response.status_code == 200:
         tokenInfo = response.json()
-        print("AccessToken:",tokenInfo.get('AccessToken'))
-        return tokenInfo.get('AccessToken')
-    except:
-      print(errorMessage)
-      return errorMessage
-
-def getPrinters():
-  try:
-    
-    token = getAccessToken()
-    header = {
-      "Authorization" : f'Bearer{token}',
-      "Content-Type" : "application/json"
-    }
-    response = requests.get(f"https://graph.microsoft.com/PrinterShare.Read.All",headers=header)
-    errorMessage="UniversalPrint API error"
-
-    if response.status() == 200:
-      printersInfo = response.json(),
-      return printersInfo 
-  except:
+        print("AccessToken:",tokenInfo.get('access_token'))
+        return tokenInfo.get('access_token')
+      else:
+        print(errorMessage, response.text, "Response status code:", response.status_code)
+    except Exception as e:
+      print(errorMessage,e)
     return errorMessage
+
+if __name__ == "__main__":
+    print("Starting app...")
+    token = getAccessToken()
+    print("Retrieved Token:", token)
+
+
