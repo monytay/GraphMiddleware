@@ -4,20 +4,23 @@ import json
 import logging 
 import azure.functions as func
 
-tenantID="test"
-clientID="test2"
-clientSecret="secret"
-scope = "https://www.graph.microsoft.com/.default" 
-
-
 def getAccessToken():
-    try:
-      data = {
-        "tenant_id" : "test",
-        "client_id" : "test2",
-        "client_secret" : "secret",
+    tenantID="Real id from azzure"
+    clientID="real client id from azure"
+    clientSecret="real client secret from azure"
+    scope = "https://www.graph.microsoft.com/.default" 
+
+    url = f"https://login.microsoftonline.com/{tenantID}/oauth2/v2.0/token"
+
+    data = {
+        "grant_type" : "client_credentials",
+        "client_id" : clientID,
+        "client_secret" : clientSecret,
+        "scope": "https://graph.microsoft.com/.default"
       }
-      response = requests.post(f'http://localhost:8002/getToken/', json = data)
+
+    try:
+      response = requests.post(url, data = data)
       errorMessage="Token retrieval error"
 
       print("Sending request to get access token...")  # Debugging line
@@ -33,9 +36,7 @@ def getAccessToken():
       print(errorMessage,e)
     return errorMessage
 
-if __name__ == "__main__":
-    print("Starting app...")
-    token = getAccessToken()
-    print("Retrieved Token:", token)
+
+
 
 
