@@ -19,8 +19,17 @@ def getPrinters():
 
     if response.status_code == 200:
       printersInfo = response.json()
-      print(printersInfo)
-      return printersInfo 
+
+      filteredPrinters = []
+      for printer in printersInfo.get("value", []):
+        filteredPrinters.append({
+          "displayName":printer.get("displayName"),
+          "manufacturer":printer.get("manufacturer"),
+          "isAcceptingJobs":printer.get("isAcceptingJobs"),
+          "status":printer.get("status")
+        })
+      print("Printers:", filteredPrinters)
+      return filteredPrinters
     else:
       print(errorMessage, response.text, "Response status code: ", response.status_code)
   except Exception as e:
@@ -31,3 +40,4 @@ if __name__ == "__main__":
     print("Starting app...")
     printers = getPrinters()
     print("Retrieved Printers Info:", printers)
+
