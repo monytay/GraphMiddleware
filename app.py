@@ -3,7 +3,23 @@ import requests
 import json
 import logging 
 import azure.functions as func
+import getNeat
+import getPrinters
+import getServices
+from fastapi import FastAPI
 
+app = FastAPI()
+
+@app.get("/")
+def allData():
+    data = {
+    printers = getPrinters(),
+    services = getServices(),
+    neat = getNeat()
+    }
+
+    return data
+    
 def getAccessToken():
     tenantID="Real id from azzure"
     clientID="real client id from azure"
@@ -36,6 +52,9 @@ def getAccessToken():
       print(errorMessage,e)
     return errorMessage
 
+if __name__ == __main__:
+    import uvicorn
+    uvicorn.run(app, host=0.0.0.0, port=8000)
 
 
 
